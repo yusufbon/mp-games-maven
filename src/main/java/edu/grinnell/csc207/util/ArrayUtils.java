@@ -1,7 +1,6 @@
 package edu.grinnell.csc207.util;
 
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * A variety of utilities for working with arrays.
@@ -42,6 +41,8 @@ public class ArrayUtils {
    *   The array of strings to search.
    * @param str
    *   The string to look for.
+   *
+   * @return true if the element is in the array and false otherwise.
    */
   public static boolean arrayContainsCI(String[] strings, String str) {
     str = str.toLowerCase();
@@ -56,8 +57,10 @@ public class ArrayUtils {
   /**
    * Remove all copies of a value from an array.
    *
-   * @param vals 
-   *   The array of values.
+   * @param <T>
+   *   The types of values in the array.
+   * @param vals
+   *   An array of values.
    * @param val
    *   The value to remove
    *

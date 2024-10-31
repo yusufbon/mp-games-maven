@@ -53,7 +53,7 @@ public class Game1P {
 
                 * -w width - set up the width of the board
                 * -h height - set up the height of the board
-                * -s game-number - choose the game setup number (useful if 
+                * -s game-number - choose the game setup number (useful if
                   you want to play the same setup multiple times).
 
                 Your game board is a grid of X's, O's, *'s, and blanks.
@@ -74,13 +74,40 @@ public class Game1P {
                 After each move, any *'s eliminate one neighboring piece
                 and move over that piece, using the following priority grid.
 
-                    1|6|7 
+                    1|6|7
                     -+-+-
                     5|*|4
                     -+-+-
-                    8|3|2 
+                    8|3|2
                 """);
   } // printInstructions(PrintWriter)
+
+  /**
+   * Print the results of the game.
+   *
+   * @param pen
+   *   What to use for printing.
+   * @param board
+   *   The game board at the end.
+   */
+  static void printResults(PrintWriter pen, Matrix<String> board) {
+    int xs = 0;
+    int os = 0;
+    for (int row = 0; row < board.height(); row++) {
+      for (int col = 0; col < board.width(); col++) {
+        String cell = board.get(row, col);
+        if ("O".equals(cell)) {
+          ++os;
+        } else if ("X".equals(cell)) {
+          ++xs;
+        } // if/else
+      } // for
+    } // for
+    pen.println();
+    pen.println("Xs remaining: " + xs);
+    pen.println("Os remaining: " + os);
+    pen.println("Score: " + (os - xs));
+  } // printResults
 
   /**
    * Process the board, eliminating any matching cells. (The efficiency
@@ -96,7 +123,7 @@ public class Game1P {
     String oldStar = ":";       // The place the star was.
     String repStar = "@";       // A star about to be overwritten.
 
-    // Run through all the cells, looking for *'s. 
+    // Run through all the cells, looking for *'s.
     for (int row = 0; row < board.height(); row++) {
       for (int col = 0; col < board.width(); col++) {
         String cell = board.get(row, col);
@@ -124,7 +151,7 @@ public class Game1P {
     for (int row = 0; row < board.height(); row++) {
       for (int col = 0; col < board.width(); col++) {
         String cell = board.get(row, col);
-      if (cell.equals(oldStar)) {
+        if (cell.equals(oldStar)) {
           board.set(row, col, " ");
         } else if (cell.equals(newStar) || cell.equals(repStar)) {
           board.set(row, col, "*");
@@ -259,7 +286,7 @@ public class Game1P {
           if (rrRemaining <= 0) {
             commands = ArrayUtils.removeAll(commands, "RR");
           } // if
-          int rowToRemove = 
+          int rowToRemove =
               IOUtils.readInt(pen, eyes, "Row: ", 0, board.height());
           prev = board.clone();
           board.deleteRow(rowToRemove);
@@ -275,7 +302,7 @@ public class Game1P {
           if (rcRemaining <= 0) {
             commands = ArrayUtils.removeAll(commands, "RC");
           } // if
-          int colToRemove = 
+          int colToRemove =
               IOUtils.readInt(pen, eyes, "Column: ", 0, board.width());
           prev = board.clone();
           board.deleteCol(colToRemove);
@@ -291,8 +318,8 @@ public class Game1P {
           if (irRemaining <= 0) {
             commands = ArrayUtils.removeAll(commands, "IR");
           } // if
-          int rowToInsert = 
-              IOUtils.readInt(pen, eyes, "Row: ", 0, board.height()+1);
+          int rowToInsert =
+              IOUtils.readInt(pen, eyes, "Row: ", 0, board.height() + 1);
           prev = board.clone();
           board.insertRow(rowToInsert);
           process(board);
@@ -307,8 +334,8 @@ public class Game1P {
           if (icRemaining <= 0) {
             commands = ArrayUtils.removeAll(commands, "IC");
           } // if
-          int colToInsert = 
-              IOUtils.readInt(pen, eyes, "Column: ", 0, board.width()+1);
+          int colToInsert =
+              IOUtils.readInt(pen, eyes, "Column: ", 0, board.width() + 1);
           prev = board.clone();
           board.insertCol(colToInsert);
           process(board);
@@ -338,21 +365,7 @@ public class Game1P {
     } // while
 
     // Print final results
-    int xs = 0;
-    int os = 0;
-    for (int row = 0; row < board.height(); row++) {
-      for (int col = 0; col < board.width(); col++) {
-        String cell = board.get(row, col);
-        if ("O".equals(cell)) {
-          ++os;
-        } else if ("X".equals(cell)) {
-          ++xs;
-        } // if/else
-      } // for
-    } // for
-    pen.println("Xs remaining: " + xs);
-    pen.println("Os remaining: " + os);
-    pen.println("Score: " + (os - xs));
+    printResults(pen, board);
 
     // And we're done
     pen.close();

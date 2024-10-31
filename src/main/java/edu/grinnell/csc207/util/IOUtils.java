@@ -65,10 +65,12 @@ public class IOUtils {
    * @param prompt
    *   The prompt to print.
    *
+   * @return the integer read
+   *
    * @throws IOException
    *   If an I/O exception occurs.
    */
-  public static int readInt(PrintWriter pen, BufferedReader eyes, 
+  public static int readInt(PrintWriter pen, BufferedReader eyes,
       String prompt) throws IOException {
     int result = 0;
     boolean done = false;
@@ -100,10 +102,12 @@ public class IOUtils {
    * @param upper
    *   The upper bound (exclusive).
    *
+   * @return the integer read
+   *
    * @throws IOException
    *   If an I/O exception occurs.
    */
-  public static int readInt(PrintWriter pen, BufferedReader eyes, 
+  public static int readInt(PrintWriter pen, BufferedReader eyes,
       String prompt, int lower, int upper) throws IOException {
     int result = 0;
     boolean done = false;
@@ -116,8 +120,8 @@ public class IOUtils {
         if ((result >= lower) && (result < upper)) {
           done = true;
         } else {
-          pen.printf("I'm sorry, but %d is outside the range [%d,%d)\n",
-              result, lower, upper);
+          pen.printf("I'm sorry, but %d is outside the range %d to %d\n",
+              result, lower, upper-1);
         } // if/else
       } catch (NumberFormatException e) {
         pen.printf("I'm sorry, but I can't interpret '%s'\n", response);
