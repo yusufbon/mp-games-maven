@@ -28,12 +28,12 @@ public class Game1P {
   /**
    * The default width.
    */
-  static final int DEFAULT_WIDTH = 15;
+  static final int DEFAULT_WIDTH = 10;
 
   /**
    * The default number of rows.
    */
-  static final int DEFAULT_HEIGHT = 10;
+  static final int DEFAULT_HEIGHT = 8;
 
   // +----------------+----------------------------------------------
   // | Helper methods |
@@ -74,11 +74,11 @@ public class Game1P {
                 After each move, any *'s eliminate one neighboring piece
                 and move over that piece, using the following priority grid.
 
-                1|6|7 
-                -+-+-
-                5|*|4
-                -+-+-
-                8|3|2 
+                    1|6|7 
+                    -+-+-
+                    5|*|4
+                    -+-+-
+                    8|3|2 
                 """);
   } // printInstructions(PrintWriter)
 
@@ -107,16 +107,10 @@ public class Game1P {
             int newcol = col + offset[1];
             try {
               neighbor = board.get(newrow, newcol);
-              // Are we replacing a star?
-              if (neighbor.equals("*") || neighbor.equals(oldStar)
-                   || neighbor.equals(repStar)) {
-                board.set(row, col, oldStar);
-                board.set(newrow, newcol, repStar);
-                break;
-              } else if (neighbor.equals("X") || neighbor.equals("O")) {
+              if (neighbor.equals("X") || neighbor.equals("O")) {
                 board.set(row, col, oldStar);
                 board.set(newrow, newcol, newStar);
-                break;
+                break; // escape from the loop
               } // if/else
             } catch (IndexOutOfBoundsException e) {
               // No neighbor, go on.
@@ -183,10 +177,10 @@ public class Game1P {
     PrintWriter pen = new PrintWriter(System.out, true);
     BufferedReader eyes = new BufferedReader(new InputStreamReader(System.in));
 
-    int rrRemaining = 3;
-    int rcRemaining = 3;
-    int icRemaining = 3;
-    int irRemaining = 3;
+    int rrRemaining = 2;
+    int rcRemaining = 2;
+    int icRemaining = 2;
+    int irRemaining = 2;
     int width = DEFAULT_WIDTH;
     int height = DEFAULT_HEIGHT;
     Random rand = new Random();
@@ -305,10 +299,22 @@ public class Game1P {
           break;
 
         case "IC":
+          if (icRemaining < 0) {
+            pen.println("Sorry, you've used up your insert row commands.");
+            break;
+          } // if
+          --icRemaining;
+          if (icRemaining <= 0) {
+            commands = ArrayUtils.removeAll(commands, "IC");
+          } // if
+          int colToInsert = 
+              IOUtils.readInt(pen, eyes, "Column: ", 0, board.width()+1);
+          prev = board.clone();
+          board.insertCol(colToInsert);
+          process(board);
           break;
 
         case "DONE":
-        case "QUIT":
           done = true;
           break;
 
@@ -318,7 +324,11 @@ public class Game1P {
           break;
 
         case "UNDO":
-          board = prev;
+          if (board == prev) {
+            pen.println("Sorry: There's only one level of undo.");
+          } else {
+            board = prev;
+          } // if/else
           break;
 
         default:
